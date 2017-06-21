@@ -26,28 +26,40 @@ class Library{
 	//		return "Success";
 	//	}
 	//}
-	function ambil_rule($kode_fakta)
+	function ambil_rule($kode_fakta,$kode_proses)
     {
-    	if($kode_fakta=='0'){
-    		$hapus_Semua="DELETE FROM fakta";
-    		$proses_hapus = $this->db->query($hapus_Semua);
-    		$sql = "SELECT * FROM rule WHERE start_rule='0'";
-			$query = $this->db->query($sql);
-			return $query;
+    	if($kode_proses=='proses'){
+    		if($kode_fakta=='0'){
+	    		$hapus_Semua="DELETE FROM fakta";
+	    		$proses_hapus = $this->db->query($hapus_Semua);
+	    		$sql = "SELECT * FROM rule INNER JOIN kondisi ON point_rule = id_kondisi WHERE start_rule='0'";
+				$query = $this->db->query($sql);
+				return $query;
+	    	}
+	    	else{
+	    		$sql = "SELECT * FROM rule WHERE start_rule='$kode_fakta'";
+				$query = $this->db->query($sql);
+				while($data = $query->fetch(PDO::FETCH_OBJ)){
+				    if($data->status_rule=='0'){
+				        $cek_rule = "SELECT * FROM rule INNER JOIN kondisi ON point_rule = id_kondisi WHERE start_rule='$kode_fakta'";
+						$query = $this->db->query($cek_rule);
+						return $query;
+				    }
+				    else{
+						header('Location: Index.php');
+				    }
+				}
+    		}
     	}
-    	else{
-    		$sql = "SELECT * FROM rule WHERE start_rule='$kode_fakta'";
+    	else if($kode_proses=='insert'){
+    		$sql = "INSERT INTO fakta (id_fakta, kode_fakta) VALUES('', '$kode_fakta')";
 			$query = $this->db->query($sql);
-			while($data = $query->fetch(PDO::FETCH_OBJ)){
-			    if($data->status_rule=='0'){
-			        $cek_rule = "SELECT * FROM rule WHERE start_rule='$kode_fakta'";
-					$query = $this->db->query($cek_rule);
-					return $query;
-			    }
-			    else{
-					header('Location: Index.php');
-			    }
-			}
+	    	if(!$query){
+					return "Failed";
+				}
+				else{
+					header('Location: Input3.php');
+				}
     	}
     }
 	public function looping_rule($key)
@@ -83,7 +95,7 @@ class Library{
 	//	}
 	//}
 	public function showBooks(){
-		$sql = "SELECT * FROM fakta";
+		$sql = "SELECT * FROM fakta INNER JOIN kondisi ON kode_fakta=id_kondisi";
 		$query = $this->db->query($sql);
 		return $query;
 	}

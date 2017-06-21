@@ -12,6 +12,7 @@
 <table class="table">
 <tr>
 <td>ID_Fakta</td>
+<td>ID_Kondisi</td>
 <td>Kode_Fakta</td>
 </tr>
 <?php
@@ -24,7 +25,8 @@ while($data = $show->fetch(PDO::FETCH_OBJ)){
 echo "
 <tr>
 <td>$data->id_fakta</td>
-<td>$data->kode_fakta</td>
+<td>$data->id_kondisi</td>
+<td>$data->nama_kondisi</td>
 </tr>";
 };
 ?>
